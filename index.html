@@ -109,6 +109,11 @@
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 min-h-screen flex flex-col">
+  <div style="margin: 10px 0;">
+  <label for="viewerWidth">Width:</label>
+  <input type="number" id="viewerWidth" value="500" style="width: 70px;">
+  <button onclick="resizeViewer()">Resize</button>
+</div>
     <div x-data="imageProcessor()" x-init="initDarkMode()" class="flex-grow" role="main">
         <header class="bg-white dark:bg-gray-800 shadow-sm transition-colors duration-300">
             <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center">
@@ -562,5 +567,18 @@
             };
         }
     </script>
+    <script>
+  const originalRatio = 1; // Change to actual width/height ratio if not square
+
+  function resizeViewer() {
+    const width = parseInt(document.getElementById('viewerWidth').value);
+    const height = Math.round(width / originalRatio);
+
+    const viewer = document.getElementById("appdiv");
+    viewer.style.width = width + "px";
+    viewer.style.height = height + "px";
+  }
+</script>
+
 </body>
 </html>
