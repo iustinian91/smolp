@@ -205,36 +205,38 @@
                     </template>
                 </div>
 
-<div class="mt-6 w-full max-w-xl mx-auto">
+<div class="mt-6 w-full max-w-4xl mx-auto px-4">
   <section class="flex flex-col gap-4 w-full" aria-label="Image Processing Controls">
-    <!-- Top Row - Format, Quality, and Resize -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
-      <!-- Output Format -->
+    <!-- Controls Row - Adjusts layout based on screen size -->
+    <div class="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-4 w-full">
+      <!-- Output Format - Full width on mobile, then side-by-side -->
       <div class="h-full">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Output Format</label>
-        <select x-model="outputFormat" class="mt-1 block w-full h-[42px] pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+        <select x-model="outputFormat" class="mt-1 block w-full h-10 pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
           <option value="jpeg">JPEG</option>
           <option value="png">PNG</option>
           <option value="webp">WebP</option>
         </select>
       </div>
 
-      <!-- Quality Slider -->
+      <!-- Quality Slider - Pairs with Format on medium screens -->
       <div class="h-full">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quality</label>
         <div class="mt-1 space-y-1">
-          <input type="range" x-model.number="quality" min="0.1" max="1" step="0.1" class="w-full h-2 accent-blue-600 dark:accent-blue-400 rounded-lg appearance-none cursor-pointer">
-          <span class="block text-sm text-gray-500 dark:text-gray-400 text-center" x-text="Math.round(quality * 100) + '%'"></span>
+          <input type="range" x-model.number="quality" min="0.1" max="1" step="0.1" 
+                class="w-full h-2 accent-blue-600 dark:accent-blue-400 rounded-lg appearance-none cursor-pointer">
+          <span class="block text-sm text-gray-500 dark:text-gray-400 text-center" 
+                x-text="Math.round(quality * 100) + '%'"></span>
         </div>
       </div>
 
-      <!-- Resize -->
+      <!-- Resize - Full width on small mobile, then moves to side -->
       <div class="h-full">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Resize (optional)</label>
-        <div class="flex items-center gap-2 mt-1 h-[42px]">
+        <div class="flex items-center gap-2 mt-1 h-10">
           <input type="number" x-model.number="resizeWidth" placeholder="Width" 
                 class="flex-1 h-full text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md">
-          <span class="text-gray-700 dark:text-gray-300">x</span>
+          <span class="text-gray-700 dark:text-gray-300">×</span>
           <input type="number" x-model.number="resizeHeight" placeholder="Height" 
                 class="flex-1 h-full text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md">
         </div>
@@ -242,12 +244,12 @@
       </div>
     </div>
 
-    <!-- Bottom Row - Action Buttons -->
-    <div class="flex flex-col sm:flex-row gap-2 w-full">
+    <!-- Action Buttons - Stack on mobile, row on larger screens -->
+    <div class="flex flex-col xs:flex-row gap-2 w-full">
       <!-- Process/Download Button -->
       <button
         @click="allProcessed ? downloadAllImages() : processAllImages()"
-        class="flex-1 sm:flex-none inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 disabled:opacity-50 h-[42px] min-w-[120px]"
+        class="flex-1 xs:flex-none inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 disabled:opacity-50 h-10 min-w-[120px]"
         :disabled="processing || sendingEmail"
         x-show="!showEmailForm"
       >
@@ -256,10 +258,11 @@
         <span x-show="!processing && allProcessed">Download All</span>
       </button>
 
-      <!-- Email Button -->
-      <div class="relative flex flex-1 sm:flex-none h-[42px]">
-        <!-- Email Input (hidden by default, slides in) -->
-        <div class="flex overflow-hidden transition-all duration-300 ease-in-out absolute right-full mr-2 top-0 w-full sm:w-48" :class="{'sm:w-48': showEmailForm, 'w-0': !showEmailForm}">
+      <!-- Email Button Group - Adapts to available space -->
+      <div class="relative flex flex-1 xs:flex-none h-10">
+        <!-- Email Input - Slides in from left -->
+        <div class="flex overflow-hidden transition-all duration-300 ease-in-out absolute right-full mr-2 top-0 w-full xs:w-48" 
+             :class="{'xs:w-48': showEmailForm, 'w-0': !showEmailForm}">
           <input 
             type="email" 
             id="email" 
@@ -271,30 +274,30 @@
           >
         </div>
         
-        <!-- Email Toggle/Send Button -->
+        <!-- Email Action Button - Adapts width -->
         <button 
           @click="emailAddress && showEmailForm ? sendEmail() : (showEmailForm = !showEmailForm)"
-          class="w-full sm:w-[42px] h-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-gray-700 dark:text-gray-300 bg-gray-300 dark:bg-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900"
+          class="w-full xs:w-10 h-full inline-flex items-center justify-center px-2 xs:px-0 border border-transparent text-base font-medium rounded-md text-gray-700 dark:text-gray-300 bg-gray-300 dark:bg-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900"
           :disabled="sendingEmail && !emailSentSuccess" 
           :type="emailAddress && showEmailForm ? 'submit' : 'button'"
           x-show="allProcessed"
           aria-label="Toggle email input or send email"
         >
-          <!-- Icons remain the same -->
-          <svg x-show="!showEmailForm && !sendingEmail && !emailSentSuccess" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <!-- Dynamic Icons -->
+          <svg x-show="!showEmailForm && !sendingEmail && !emailSentSuccess" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>
-          <svg x-show="showEmailForm && !emailAddress && !sendingEmail && !emailSentSuccess" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg x-show="showEmailForm && !emailAddress && !sendingEmail && !emailSentSuccess" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
           </svg>
-          <svg x-show="showEmailForm && emailAddress && !sendingEmail && !emailSentSuccess" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg x-show="showEmailForm && emailAddress && !sendingEmail && !emailSentSuccess" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
           </svg>
-          <svg x-show="sendingEmail" class="animate-spin h-5 w-5 text-gray-700 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <svg x-show="sendingEmail" class="animate-spin h-5 w-5 text-gray-700 dark:text-gray-300" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <svg x-show="emailSentSuccess" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 animate-pulse-check" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg x-show="emailSentSuccess" class="h-5 w-5 text-green-500 animate-pulse-check" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
           </svg>
         </button>
