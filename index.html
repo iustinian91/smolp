@@ -136,7 +136,7 @@
             </div>
         </header>
 
-        <main class="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <main class="max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
             <div class="mb-8 text-center bg-white dark:bg-gray-800 shadow-sm rounded-lg p-6 transition-colors duration-300">
                 <p class="text-base text-gray-600 dark:text-gray-400 transition-colors duration-300 max-w-xl mx-auto">
                     Optimize your images right in your browser. Smolp processes everything locally - your files never leave your device. 
@@ -205,34 +205,31 @@
                     </template>
                 </div>
 
-               <div class="mt-6 w-full max-w-xl mx-auto">
-  <section class="flex flex-col sm:flex-row gap-4 w-full" aria-label="Image Processing Controls">
-    <!-- Image Settings Group - Now with format/quality paired -->
-    <div class="flex flex-col sm:flex-row gap-4 w-full" role="group" aria-label="Image Settings">
-      <!-- Left Group (Format and Quality) -->
-      <div class="flex flex-col sm:flex-row gap-4 flex-1">
-        <!-- Output Format -->
-        <div class="flex-1 min-w-[150px] h-full">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Output Format</label>
-          <select x-model="outputFormat" class="mt-1 block w-full h-[42px] pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
-            <option value="jpeg">JPEG</option>
-            <option value="png">PNG</option>
-            <option value="webp">WebP</option>
-          </select>
-        </div>
+<div class="mt-6 w-full max-w-xl mx-auto">
+  <section class="flex flex-col gap-4 w-full" aria-label="Image Processing Controls">
+    <!-- Top Row - Format, Quality, and Resize -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
+      <!-- Output Format -->
+      <div class="h-full">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Output Format</label>
+        <select x-model="outputFormat" class="mt-1 block w-full h-[42px] pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+          <option value="jpeg">JPEG</option>
+          <option value="png">PNG</option>
+          <option value="webp">WebP</option>
+        </select>
+      </div>
 
-        <!-- Quality -->
-        <div class="flex-1 min-w-[150px] h-full">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quality</label> 
-          <div class="mt-1 h-[42px] flex flex-col justify-center">
-            <input type="range" x-model.number="quality" min="0.1" max="1" step="0.1" class="w-full accent-blue-600 dark:accent-blue-400"> 
-          </div>
-          <span class="text-sm text-gray-500 dark:text-gray-400 block text-center sm:text-left" x-text="Math.round(quality * 100) + '%'"></span> 
+      <!-- Quality Slider -->
+      <div class="h-full">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quality</label>
+        <div class="mt-1 space-y-1">
+          <input type="range" x-model.number="quality" min="0.1" max="1" step="0.1" class="w-full h-2 accent-blue-600 dark:accent-blue-400 rounded-lg appearance-none cursor-pointer">
+          <span class="block text-sm text-gray-500 dark:text-gray-400 text-center" x-text="Math.round(quality * 100) + '%'"></span>
         </div>
       </div>
 
-      <!-- Resize (right side) -->
-      <div class="flex-1 min-w-[180px] h-full">
+      <!-- Resize -->
+      <div class="h-full">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Resize (optional)</label>
         <div class="flex items-center gap-2 mt-1 h-[42px]">
           <input type="number" x-model.number="resizeWidth" placeholder="Width" 
@@ -241,16 +238,16 @@
           <input type="number" x-model.number="resizeHeight" placeholder="Height" 
                 class="flex-1 h-full text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md">
         </div>
-        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Leave one blank for aspect ratio</p>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Leave blank to maintain ratio</p>
       </div>
     </div>
 
-    <!-- Action Buttons Group -->
-    <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+    <!-- Bottom Row - Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-2 w-full">
       <!-- Process/Download Button -->
       <button
         @click="allProcessed ? downloadAllImages() : processAllImages()"
-        class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 disabled:opacity-50 h-[58px] sm:h-[42px] min-w-[120px]"
+        class="flex-1 sm:flex-none inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 disabled:opacity-50 h-[42px] min-w-[120px]"
         :disabled="processing || sendingEmail"
         x-show="!showEmailForm"
       >
@@ -259,8 +256,8 @@
         <span x-show="!processing && allProcessed">Download All</span>
       </button>
 
-      <!-- Email Button Group -->
-      <div class="relative flex h-[58px] sm:h-[42px]">
+      <!-- Email Button -->
+      <div class="relative flex flex-1 sm:flex-none h-[42px]">
         <!-- Email Input (hidden by default, slides in) -->
         <div class="flex overflow-hidden transition-all duration-300 ease-in-out absolute right-full mr-2 top-0 w-full sm:w-48" :class="{'sm:w-48': showEmailForm, 'w-0': !showEmailForm}">
           <input 
