@@ -216,14 +216,17 @@
                                     <option value="webp">WebP</option>
                                 </select>
                             </div>
-                    <div>
+
+                            <div>
     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300">Resize (optional)</label>
-    <div class="flex space-x-2 items-center mt-1">
-        <input type="number" x-model.number="resizeWidth" placeholder="Width" class="w-20 text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md">
+    <div class="flex flex-wrap items-center gap-2 mt-1">
+        <input type="number" x-model.number="resizeWidth" placeholder="Width" 
+               class="w-24 text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md">
         <span class="text-gray-700 dark:text-gray-300">x</span>
-        <input type="number" x-model.number="resizeHeight" placeholder="Height" class="w-20 text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md">
+        <input type="number" x-model.number="resizeHeight" placeholder="Height" 
+               class="w-24 text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md">
     </div>
-    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Leave blank to keep original size.</p>
+    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Leave one dimension blank to maintain aspect ratio.</p>
 </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300">Quality</label> 
@@ -518,7 +521,7 @@ async optimizeImage(index) {
     img.src = URL.createObjectURL(file);
     await new Promise(resolve => img.onload = resolve);
 
-    // Determine the new dimensions while maintaining the aspect ratio
+    // Determine new dimensions while maintaining the aspect ratio
     let newWidth = img.width;
     let newHeight = img.height;
 
