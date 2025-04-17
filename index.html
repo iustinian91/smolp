@@ -205,94 +205,101 @@
                     </template>
                 </div>
 
-                <div class="mt-6 flex flex-col sm:flex-row justify-center gap-4 w-full max-w-xl mx-auto">
-                   <section class="mt-4 flex flex-wrap justify-between items-center w-full max-w-xl mx-auto gap-4" aria-label="Image Processing Controls">
-    <div class="flex flex-wrap gap-4 w-full sm:w-auto" role="group" aria-label="Image Settings">
-        <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300">Output Format</label>
-                                <select x-model="outputFormat" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md transition-colors duration-300">
-                                    <option value="jpeg">JPEG</option>
-                                    <option value="png">PNG</option>
-                                    <option value="webp">WebP</option>
-                                </select>
-                            </div>
+                <div class="mt-6 w-full max-w-xl mx-auto">
+  <section class="flex flex-col sm:flex-row gap-4 w-full" aria-label="Image Processing Controls">
+    <!-- Image Settings Group -->
+    <div class="flex-1 flex flex-col sm:flex-row gap-4 w-full" role="group" aria-label="Image Settings">
+      <!-- Output Format -->
+      <div class="flex-1 min-w-[150px] h-full">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Output Format</label>
+        <select x-model="outputFormat" class="mt-1 block w-full h-[42px] pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+          <option value="jpeg">JPEG</option>
+          <option value="png">PNG</option>
+          <option value="webp">WebP</option>
+        </select>
+      </div>
 
-                            <div>
-    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300">Resize (optional)</label>
-    <div class="flex flex-wrap items-center gap-2 mt-1">
-        <input type="number" x-model.number="resizeWidth" placeholder="Width" 
-               class="w-24 text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md">
-        <span class="text-gray-700 dark:text-gray-300">x</span>
-        <input type="number" x-model.number="resizeHeight" placeholder="Height" 
-               class="w-24 text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md">
+      <!-- Resize -->
+      <div class="flex-1 min-w-[180px] h-full">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Resize (optional)</label>
+        <div class="flex items-center gap-2 mt-1 h-[42px]">
+          <input type="number" x-model.number="resizeWidth" placeholder="Width" 
+                class="flex-1 h-full text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md">
+          <span class="text-gray-700 dark:text-gray-300">x</span>
+          <input type="number" x-model.number="resizeHeight" placeholder="Height" 
+                class="flex-1 h-full text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md">
+        </div>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Leave one blank for aspect ratio</p>
+      </div>
+
+      <!-- Quality -->
+      <div class="flex-1 min-w-[150px] h-full">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quality</label> 
+        <input type="range" x-model.number="quality" min="0.1" max="1" step="0.1" class="mt-1 block w-full accent-blue-600 dark:accent-blue-400 h-[42px]"> 
+        <span class="text-sm text-gray-500 dark:text-gray-400" x-text="Math.round(quality * 100) + '%'"></span> 
+      </div>
     </div>
-    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Leave one dimension blank to maintain aspect ratio.</p>
-</div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300">Quality</label> 
-                                <input type="range" x-model.number="quality" min="0.1" max="1" step="0.1" class="mt-1 block w-full accent-blue-600 dark:accent-blue-400"> 
-                                <span class="text-sm text-gray-500 dark:text-gray-400 transition-colors duration-300" x-text="Math.round(quality * 100) + '%'"></span> 
-                            </div>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button
-                                @click="allProcessed ? downloadAllImages() : processAllImages()"
-                                class="inline-flex items-center justify-center px-4 py-4 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 disabled:opacity-50 transition-colors duration-300 min-w-42 h-14"
-                                :disabled="processing || sendingEmail"
-                                x-show="!showEmailForm"
-                            >
-                                <span x-show="!processing && !allProcessed">Process All</span>
-                                <span x-show="processing">Processing...</span>
-                                <span x-show="!processing && allProcessed">Download All (.zip)</span>
-                            </button>
-                            <div class="relative flex items-center">
-                                <div class="flex overflow-hidden transition-all duration-300 ease-in-out absolute right-full mr-2 top-0" :class="{'w-48': showEmailForm, 'w-0': !showEmailForm}">
 
-                                    <form class="flex space-x-2 min-w-[12rem] max-w-[12rem]">
-                                        <input 
-                                            type="email" 
-                                            id="email" 
-                                            x-model="emailAddress"
-                                            placeholder="Enter email"
-                                            required
-                                            class="block w-full h-14 rounded-md border-gray-300 font-medium p-2 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:text-white transition-colors duration-300"
-                                            :disabled="sendingEmail"
-                                        >
-                                    </form>
-                                </div>
-                                <button 
-                                    @click="emailAddress && showEmailForm ? sendEmail() : (showEmailForm = !showEmailForm)"
-                                    class="inline-flex items-center justify-center px-4 py-4 border border-transparent text-base font-medium rounded-md text-gray-700 dark:text-gray-300 bg-gray-300 dark:bg-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 transition-colors duration-300 ml-2 w-14 h-14"
-                                    :disabled="sendingEmail && !emailSentSuccess" 
-                                    :type="emailAddress && showEmailForm ? 'submit' : 'button'"
-                                    x-show="allProcessed"
-                                    aria-label="Toggle email input or send email"
-                                >
-                                    <!-- Initial Mail Icon -->
-                                    <svg x-show="!showEmailForm && !sendingEmail && !emailSentSuccess" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                    </svg>
-                                    <!-- Collapse Icon (>>) -->
-                                    <svg x-show="showEmailForm && !emailAddress && !sendingEmail && !emailSentSuccess" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
-                                    </svg>
-                                    <!-- Send Icon (Paper Plane) -->
-                                    <svg x-show="showEmailForm && emailAddress && !sendingEmail && !emailSentSuccess" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                                    </svg>
-                                    <!-- Loading Spinner -->
-                                    <svg x-show="sendingEmail" class="animate-spin h-5 w-5 text-gray-700 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                    <!-- Success Checkmark -->
-                                    <svg x-show="emailSentSuccess" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 animate-pulse-check" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                    </svg>
-                                </button>
-                            </div>
-                            </div>
-                        </div>
+    <!-- Action Buttons Group -->
+    <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+      <!-- Process/Download Button -->
+      <button
+        @click="allProcessed ? downloadAllImages() : processAllImages()"
+        class="flex-1 sm:flex-none inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 disabled:opacity-50 h-[58px] sm:h-[42px] min-w-[120px]"
+        :disabled="processing || sendingEmail"
+        x-show="!showEmailForm"
+      >
+        <span x-show="!processing && !allProcessed">Process All</span>
+        <span x-show="processing">Processing...</span>
+        <span x-show="!processing && allProcessed">Download All</span>
+      </button>
+
+      <!-- Email Button Group -->
+      <div class="relative flex flex-1 sm:flex-none h-[58px] sm:h-[42px]">
+        <!-- Email Input (hidden by default, slides in) -->
+        <div class="flex overflow-hidden transition-all duration-300 ease-in-out absolute right-full mr-2 top-0 w-full sm:w-48" :class="{'sm:w-48': showEmailForm, 'w-0': !showEmailForm}">
+          <input 
+            type="email" 
+            id="email" 
+            x-model="emailAddress"
+            placeholder="Enter email"
+            required
+            class="block w-full h-full rounded-md border-gray-300 font-medium p-2 dark:border-gray-600 dark:bg-gray-700 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm dark:text-white"
+            :disabled="sendingEmail"
+          >
+        </div>
+        
+        <!-- Email Toggle/Send Button -->
+        <button 
+          @click="emailAddress && showEmailForm ? sendEmail() : (showEmailForm = !showEmailForm)"
+          class="w-full sm:w-[42px] h-full inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-gray-700 dark:text-gray-300 bg-gray-300 dark:bg-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900"
+          :disabled="sendingEmail && !emailSentSuccess" 
+          :type="emailAddress && showEmailForm ? 'submit' : 'button'"
+          x-show="allProcessed"
+          aria-label="Toggle email input or send email"
+        >
+          <!-- Icons remain the same -->
+          <svg x-show="!showEmailForm && !sendingEmail && !emailSentSuccess" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          <svg x-show="showEmailForm && !emailAddress && !sendingEmail && !emailSentSuccess" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+          </svg>
+          <svg x-show="showEmailForm && emailAddress && !sendingEmail && !emailSentSuccess" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+          </svg>
+          <svg x-show="sendingEmail" class="animate-spin h-5 w-5 text-gray-700 dark:text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <svg x-show="emailSentSuccess" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 animate-pulse-check" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
                     </div>
                 </div>
             </div>
