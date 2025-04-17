@@ -207,20 +207,32 @@
 
                <div class="mt-6 w-full max-w-xl mx-auto">
   <section class="flex flex-col sm:flex-row gap-4 w-full" aria-label="Image Processing Controls">
-    <!-- Image Settings Group - Now in 2 columns on mobile -->
-    <div class="grid grid-cols-2 sm:flex sm:flex-row gap-4 w-full" role="group" aria-label="Image Settings">
-      <!-- Output Format -->
-      <div class="col-span-2 sm:flex-1 sm:min-w-[150px] h-full">
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Output Format</label>
-        <select x-model="outputFormat" class="mt-1 block w-full h-[42px] pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
-          <option value="jpeg">JPEG</option>
-          <option value="png">PNG</option>
-          <option value="webp">WebP</option>
-        </select>
+    <!-- Image Settings Group - Now with format/quality paired -->
+    <div class="flex flex-col sm:flex-row gap-4 w-full" role="group" aria-label="Image Settings">
+      <!-- Left Group (Format and Quality) -->
+      <div class="flex flex-col sm:flex-row gap-4 flex-1">
+        <!-- Output Format -->
+        <div class="flex-1 min-w-[150px] h-full">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Output Format</label>
+          <select x-model="outputFormat" class="mt-1 block w-full h-[42px] pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+            <option value="jpeg">JPEG</option>
+            <option value="png">PNG</option>
+            <option value="webp">WebP</option>
+          </select>
+        </div>
+
+        <!-- Quality -->
+        <div class="flex-1 min-w-[150px] h-full">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quality</label> 
+          <div class="mt-1 h-[42px] flex flex-col justify-center">
+            <input type="range" x-model.number="quality" min="0.1" max="1" step="0.1" class="w-full accent-blue-600 dark:accent-blue-400"> 
+          </div>
+          <span class="text-sm text-gray-500 dark:text-gray-400 block text-center sm:text-left" x-text="Math.round(quality * 100) + '%'"></span> 
+        </div>
       </div>
 
-      <!-- Resize - Takes first column on mobile -->
-      <div class="col-span-1 sm:flex-1 sm:min-w-[180px] h-full">
+      <!-- Resize (right side) -->
+      <div class="flex-1 min-w-[180px] h-full">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Resize (optional)</label>
         <div class="flex items-center gap-2 mt-1 h-[42px]">
           <input type="number" x-model.number="resizeWidth" placeholder="Width" 
@@ -231,23 +243,14 @@
         </div>
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Leave one blank for aspect ratio</p>
       </div>
-
-      <!-- Quality - Takes second column on mobile -->
-      <div class="col-span-1 sm:flex-1 sm:min-w-[150px] h-full">
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Quality</label> 
-        <div class="mt-1 h-[42px] flex flex-col justify-center">
-          <input type="range" x-model.number="quality" min="0.1" max="1" step="0.1" class="w-full accent-blue-600 dark:accent-blue-400"> 
-        </div>
-        <span class="text-sm text-gray-500 dark:text-gray-400 block text-center sm:text-left" x-text="Math.round(quality * 100) + '%'"></span> 
-      </div>
     </div>
 
     <!-- Action Buttons Group -->
-    <div class="grid grid-cols-2 sm:flex sm:flex-row gap-2 w-full sm:w-auto">
+    <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
       <!-- Process/Download Button -->
       <button
         @click="allProcessed ? downloadAllImages() : processAllImages()"
-        class="col-span-2 sm:flex-none inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 disabled:opacity-50 h-[58px] sm:h-[42px] min-w-[120px]"
+        class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-900 disabled:opacity-50 h-[58px] sm:h-[42px] min-w-[120px]"
         :disabled="processing || sendingEmail"
         x-show="!showEmailForm"
       >
@@ -257,7 +260,7 @@
       </button>
 
       <!-- Email Button Group -->
-      <div class="col-span-2 relative flex h-[58px] sm:h-[42px]">
+      <div class="relative flex h-[58px] sm:h-[42px]">
         <!-- Email Input (hidden by default, slides in) -->
         <div class="flex overflow-hidden transition-all duration-300 ease-in-out absolute right-full mr-2 top-0 w-full sm:w-48" :class="{'sm:w-48': showEmailForm, 'w-0': !showEmailForm}">
           <input 
